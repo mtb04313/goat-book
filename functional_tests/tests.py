@@ -1,4 +1,5 @@
-from django.test import LiveServerTestCase
+#from django.test import LiveServerTestCase
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -11,9 +12,12 @@ MAX_WAIT = 5
 # tests are those functions whose name begins with test_
 
 #class NewVisitorTest(unittest.TestCase):
-class NewVisitorTest(LiveServerTestCase):
+#class NewVisitorTest(LiveServerTestCase):
+class NewVisitorTest(StaticLiveServerTestCase):
     def setUp(self):
         self.browser = webdriver.Firefox()
+        #self.test_url = "http://localhost:8000"
+        self.test_url = self.live_server_url
 
     def tearDown(self):
         self.browser.quit()
@@ -45,7 +49,7 @@ class NewVisitorTest(LiveServerTestCase):
         # Edith has heard about a cool new online to-do app.
         # She goes to check out its homepage
         #self.browser.get("http://localhost:8000")
-        self.browser.get(self.live_server_url)
+        self.browser.get(self.test_url) #self.live_server_url)
 
         # She notices the page title and header mention to-do lists
         self.assertIn("To-Do", self.browser.title)
@@ -84,7 +88,8 @@ class NewVisitorTest(LiveServerTestCase):
 
     def test_multiple_users_can_start_lists_at_different_urls(self):
         # Edith starts a new to-do list
-        self.browser.get(self.live_server_url)
+        self.browser.get(self.test_url) #self.live_server_url)
+        
         inputbox = self.browser.find_element(By.ID, "id_new_item")
         inputbox.send_keys("Buy peacock feathers")
         inputbox.send_keys(Keys.ENTER)
@@ -128,7 +133,7 @@ class NewVisitorTest(LiveServerTestCase):
 
     def test_layout_and_styling(self):
         # Edith goes to the home page,
-        self.browser.get(self.live_server_url)
+        self.browser.get(self.test_url) #self.live_server_url)
 
         # Her browser window is set to a very specific size
         self.browser.set_window_size(1024, 768)
