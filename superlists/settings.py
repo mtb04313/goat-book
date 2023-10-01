@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -19,13 +20,22 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-97ffdyhz9s17t(j=+lmg$xo9odsmt%4*c*cniox=_wq4nf+e#%'
+if 'DJANGO_DEBUG_FALSE' in os.environ:  
+    # SECURITY WARNING: don't run with debug turned on in production!
+    DEBUG = False
+    # SECURITY WARNING: keep the secret key used in production secret!
+    SECRET_KEY = os.environ['DJANGO_SECRET_KEY']  
+    ALLOWED_HOSTS = [os.environ['SITENAME']]
+    
+    CSRF_TRUSTED_ORIGINS = ['https://' + os.environ['SITENAME'], 'https://www.' + os.environ['SITENAME'], 'http://' + os.environ['SITENAME'], 'http://www.' + os.environ['SITENAME']]
+    
+    #CSRF_TRUSTED_ORIGINS = ["https://ec2-13-250-59-234.ap-southeast-1.compute.amazonaws.com", "https://www.ec2-13-250-59-234.ap-southeast-1.compute.amazonaws.com", "http://ec2-13-250-59-234.ap-southeast-1.compute.amazonaws.com", "http://www.ec2-13-250-59-234.ap-southeast-1.compute.amazonaws.com"]
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = ['*']
+else:
+    DEBUG = True  
+    SECRET_KEY = 'django-insecure-97ffdyhz9s17t(j=+lmg$xo9odsmt%4*c*cniox=_wq4nf+e#%'
+    ALLOWED_HOSTS = []
+    #ALLOWED_HOSTS = ['*']
 
 
 # Application definition
