@@ -1,0 +1,15 @@
+[Unit]
+Description=Gunicorn server for SHORT_NAME
+
+[Service]
+Restart=on-failure  
+User=ubuntu
+WorkingDirectory=/home/ubuntu/sites/SHORT_NAME  
+EnvironmentFile=/home/ubuntu/sites/SHORT_NAME/.env  
+
+ExecStart=/home/ubuntu/sites/SHORT_NAME/.venv/bin/gunicorn \
+    --bind unix:/tmp/SHORT_NAME.socket \
+    superlists.wsgi:application  
+
+[Install]
+WantedBy=multi-user.target
