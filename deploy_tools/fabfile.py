@@ -53,14 +53,14 @@ def _update_database():
     
     
 def _provision_nginx_and_unicorn():
-    ENV_HOST = {env.host}
+    ENV_HOST = f'{env.host}'
 
-    nginx_sed_cmd = 'cat ./deploy_tools/nginx.template.conf ' + \
+    nginx_sed_cmd = 'cat ./deploy_tools/nginx.ssl.template.conf ' + \
               '| sed "s/DOMAIN/{}/g" '.format(ENV_HOST) +  \
               '| sed "s/SHORT_NAME/{}/g" '.format(SHORT_NAME) + \
               '| sudo tee /etc/nginx/sites-available/{}'.format(SHORT_NAME)
             
-    nginx_ln_cmd = 'sudo ln -s /etc/nginx/sites-available/{} '.format(SHORT_NAME) + \
+    nginx_ln_cmd = 'sudo ln -sf /etc/nginx/sites-available/{} '.format(SHORT_NAME) + \
                 '/etc/nginx/sites-enabled/{}'.format(SHORT_NAME)
         
     gunicorn_sed_cmd = 'cat ./deploy_tools/gunicorn-systemd.template.service ' + \
@@ -85,12 +85,12 @@ def _provision_nginx_and_unicorn():
 def test():
     ENV_HOST = 'ec2-13-250-59-234.ap-southeast-1.compute.amazonaws.com'
 
-    nginx_sed_cmd = 'cat ./deploy_tools/nginx.template.conf ' + \
+    nginx_sed_cmd = 'cat ./deploy_tools/nginx.ssl.template.conf ' + \
               '| sed "s/DOMAIN/{}/g" '.format(ENV_HOST) +  \
               '| sed "s/SHORT_NAME/{}/g" '.format(SHORT_NAME) + \
               '| sudo tee /etc/nginx/sites-available/{}'.format(SHORT_NAME)
             
-    nginx_ln_cmd = 'sudo ln -s /etc/nginx/sites-available/{} '.format(SHORT_NAME) + \
+    nginx_ln_cmd = 'sudo ln -sf /etc/nginx/sites-available/{} '.format(SHORT_NAME) + \
                 '/etc/nginx/sites-enabled/{}'.format(SHORT_NAME)
         
     gunicorn_sed_cmd = 'cat ./deploy_tools/gunicorn-systemd.template.service ' + \
